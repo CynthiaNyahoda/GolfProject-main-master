@@ -43,9 +43,11 @@ urlpatterns = [
     path("members", views.members, name="member-page"),
     path("manage_member", views.manage_member, name="manage-member"),
     path("manage_member/<int:pk>", views.manage_member, name="manage-member-pk"),
+    path("view_member/scanner.html/<int:pk>/", views.view_member, name="view-member")
+
     # path('view_member',views.view_member,name='view-member'),
-    path("view_member/<int:pk>/", views.view_member, name="view-member"),
-    path("view_member/scanner.html", scanner_view, name="scanner-view"),
+    # path("view_member/<int:pk>/", views.view_member, name="view-member"),
+    # path("view_member/scanner.html", scanner_view, name="scanner-view"),
     path("save_member", views.save_member, name="save-member"),
     path("delete_member/<int:pk>", views.delete_member, name="delete-member"),
     path("group_member/", views.per_group, name="group-member"),
