@@ -434,8 +434,13 @@ def view_card(request, pk=None):
 def scanner_view(request):
     if request.method == 'POST' and 'scan-result' in request.POST:
         scan_result = request.POST.get('scan-result')
-        member = models.Members.objects.get(member_code=scan_result)
-        return redirect('/view-member/' + str(member.id))
+        try:
+            member = models.Members.objects.get(code=scan_result)
+            return redirect('/view-member/' + str(member.id))
+        except models.Members.DoesNotExist:
+            # Handle the case when member with the specified code does not exist
+            return HttpResponse('Member not found')
+
 
 @login_required
 def view_scanner(request):
