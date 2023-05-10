@@ -46,18 +46,10 @@
  <body> 
     <div class="ui container">
         <!-- <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=www.google.com"> -->
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://grand-baie-golf-club.onrender.com/view_member/?group={{ member.group|urlencode }}&name={{ member.name|urlencode }}&gender={{ member.gender|urlencode }}&contact={{ member.contact|urlencode }}&email={{ member.email|urlencode }}&address={{ member.address|urlencode }}">
-
+        {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://grand-baie-golf-club.onrender.com/view_member/?group={{ member.group|urlencode }}&name={{ member.name|urlencode }}&gender={{ member.gender|urlencode }}&contact={{ member.contact|urlencode }}&email={{ member.email|urlencode }}&address={{ member.address|urlencode }}"> {% endcomment %}
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}{% static 'scanner/scanner.html' %}?group={{request.GET.group}}&amp;name={{request.GET.name}}&amp;gender={{request.GET.gender}}&amp;contact={{request.GET.contact}}&amp;email={{request.GET.email}}&amp;address={{request.GET.address}}{% if request.path|slice:'12:' == '/view_member/' %}&amp;view=true{% endif %}">
         {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{request.scheme}}://{{request.get_host}}/view-member/{{member.id}}/"> {% endcomment %}
 
-
-            {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}{% static 'scanner/scanner.html' %}?group={{request.GET.group}}&amp;name={{request.GET.name}}&amp;gender={{request.GET.gender}}&amp;contact={{request.GET.contact}}&amp;email={{request.GET.email}}&amp;address={{request.GET.address}}{% if request.path|slice:'12:' == '/view_member/' %}&amp;view=true{% endif %}"> {% endcomment %}
-            {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://grand-baie-golf-club.onrender.com/view_member/?group={{ member.group }}&name={{ member.name }}&gender={{ member.gender }}&contact={{ member.contact }}&email={{ member.email }}&address={{ member.address }}"> {% endcomment %}
-
-
-
-
-        
        
     </div>
 
