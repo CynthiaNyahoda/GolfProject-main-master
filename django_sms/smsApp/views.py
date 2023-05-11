@@ -418,45 +418,32 @@ def view_card(request, pk=None):
         return render(request, "view_id.html", context)
 
 
-from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 def scanner_view(request):
-    if request.method == 'POST' and 'scan-result' in request.POST:
-        # Extract member's information from QR code
-        scanned_info = request.POST.get('scan-result')
-        info_list = scanned_info.split('&')
-        info_dict = {}
-        for info in info_list:
-            key, value = info.split('=')
-            info_dict[key] = value
+    if request.method == 'GET':
+        group = request.GET.get('group')
+        name = request.GET.get('name')
+        gender = request.GET.get('gender')
+        contact = request.GET.get('contact')
+        email = request.GET.get('email')
+        address = request.GET.get('address')
 
-        # Retrieve the member ID
-        member_id = info_dict.get('member_id')  # Assuming the member ID is present in the QR code data
-
-        # Redirect to member's profile
-        group = info_dict.get('group')
-        name = info_dict.get('name')
-        gender = info_dict.get('gender')
-        contact = info_dict.get('contact')
-        email = info_dict.get('email')
-        address = info_dict.get('address')
-
-        # Generate the URL with query parameters
-        query_params = {
-            'group': group,
-            'name': name,
-            'gender': gender,
-            'contact': contact,
-            'email': email,
-            'address': address,
-        }
-
-        view_member_url = reverse('smsApp:view_member', args=[member_id])
-        view_member_url += '?' + '&'.join([f'{key}={value}' for key, value in query_params.items()])
-
-        return redirect(view_member_url)
+        # Create a new member object or retrieve an existing one
+        # using the unique properties (e.g. name, email, etc.)
+        member, created = Members.objects.get_or_create(
+            name=name,
+            gender=gender,
+            contact=contact,
+            email=email,
+            address=address,
+        )
+        
+        # Redirect to the view_member page with the appropriate member ID
+        return HttpResponseRedirect(f"/view_member/{member.id}/")
 
     return render(request, 'scanner.html')
+
 
 
 
