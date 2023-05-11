@@ -430,10 +430,10 @@ def view_card(request, pk=None):
 #     )
 
 #     return redirect(url)
-def generate_qr_code(request):
-    qr_code_url = f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={request.scheme}://{request.get_host()}/view_member/?group={request.GET.get('group')}&name={request.GET.get('name')}&gender={request.GET.get('gender')}&contact={request.GET.get('contact')}&email={request.GET.get('email')}&address={request.GET.get('address')}"
+# def generate_qr_code(request):
+#     qr_code_url = f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={request.scheme}://{request.get_host()}/view_member/?group={request.GET.get('group')}&name={request.GET.get('name')}&gender={request.GET.get('gender')}&contact={request.GET.get('contact')}&email={request.GET.get('email')}&address={request.GET.get('address')}"
     
-    return render(request, 'scanner.html', {'qr_code_url': qr_code_url})
+#     return render(request, 'scanner.html', {'qr_code_url': qr_code_url})
 
 
 def scanner_view(request):
