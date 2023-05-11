@@ -45,8 +45,11 @@
 </style> 
  <body> 
     <div class="ui container">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}/" alt="QR Code">
 
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}{% url 'smsApp:scanner_view' %}?group={{request.GET.group}}&amp;name={{request.GET.name}}&amp;gender={{request.GET.gender}}&amp;contact={{request.GET.contact}}&amp;email={{request.GET.email}}&amp;address={{request.GET.address}}{% if request.path|slice:'12:' == '/view_member/' %}&amp;view=true{% endif %}">
+
+        {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}{% url 'smsApp:scanner_view' %}?group={{request.GET.group}}&amp;name={{request.GET.name}}&amp;gender={{request.GET.gender}}&amp;contact={{request.GET.contact}}&amp;email={{request.GET.email}}&amp;address={{request.GET.address}}{% if request.path|slice:'12:' == '/view_member/' %}&amp;view=true{% endif %}">
+ {% endcomment %}
 
 
 
