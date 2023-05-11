@@ -418,49 +418,22 @@ def view_card(request, pk=None):
         return render(request, "view_id.html", context)
 
 
-from django.http import HttpResponseRedirect
+
+
+
+
+
+
 
 def scanner_view(request):
-    if request.method == 'GET':
-        group = request.GET.get('group')
-        first_name = request.GET.get('first_name')
-        last_name = request.GET.get('last_name')
-        middle_name = request.GET.get('middle_name')
-        gender = request.GET.get('gender')
-        contact = request.GET.get('contact')
-        email = request.GET.get('email')
-        address = request.GET.get('address')
-
-        # Create a new member object or retrieve an existing one
-        # using the unique properties (e.g., first_name, last_name, email, etc.)
-        member, created = Members.objects.get_or_create(
-            first_name=first_name,
-            last_name=last_name,
-            middle_name=middle_name,
-            gender=gender,
-            contact=contact,
-            email=email,
-            address=address,
-        )
-
-        # Redirect to the view_member page with the appropriate member ID
-        return HttpResponseRedirect(f"/view_member/{member.id}/")
-
-    return render(request, 'scanner.html')
-
-
-
-
-
-# def scanner_view(request):
-#     if request.method == 'POST' and 'scan-result' in request.POST:
-#         scan_result = request.POST.get('scan-result')
-#         try:
-#             member = models.Members.objects.get(code=scan_result)
-#             return redirect('/view-member/' + str(member.id))
-#         except models.Members.DoesNotExist:
-#             # Handle the case when member with the specified code does not exist
-#             return HttpResponse('Member not found')
+    if request.method == 'POST' and 'scan-result' in request.POST:
+        scan_result = request.POST.get('scan-result')
+        try:
+            member = models.Members.objects.get(code=scan_result)
+            return redirect('/view-member/' + str(member.id))
+        except models.Members.DoesNotExist:
+            # Handle the case when member with the specified code does not exist
+            return HttpResponse('Member not found')
 
 
 @login_required
