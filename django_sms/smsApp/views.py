@@ -423,26 +423,31 @@ from django.http import HttpResponseRedirect
 def scanner_view(request):
     if request.method == 'GET':
         group = request.GET.get('group')
-        name = request.GET.get('name')
+        first_name = request.GET.get('first_name')
+        last_name = request.GET.get('last_name')
+        middle_name = request.GET.get('middle_name')
         gender = request.GET.get('gender')
         contact = request.GET.get('contact')
         email = request.GET.get('email')
         address = request.GET.get('address')
 
         # Create a new member object or retrieve an existing one
-        # using the unique properties (e.g. name, email, etc.)
+        # using the unique properties (e.g., first_name, last_name, email, etc.)
         member, created = Members.objects.get_or_create(
-            name=name,
+            first_name=first_name,
+            last_name=last_name,
+            middle_name=middle_name,
             gender=gender,
             contact=contact,
             email=email,
             address=address,
         )
-        
+
         # Redirect to the view_member page with the appropriate member ID
         return HttpResponseRedirect(f"/view_member/{member.id}/")
 
     return render(request, 'scanner.html')
+
 
 
 
