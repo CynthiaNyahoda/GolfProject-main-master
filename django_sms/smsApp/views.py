@@ -418,22 +418,57 @@ def view_card(request, pk=None):
         return render(request, "view_id.html", context)
 
 
+# from django.urls import reverse
+
+# def scanner_view(request):
+#     if request.method == 'POST' and 'scan-result' in request.POST:
+#         # Extract member's information from QR code
+#         scanned_info = request.POST.get('scan-result')
+#         info_list = scanned_info.split('&')
+#         info_dict = {}
+#         for info in info_list:
+#             key, value = info.split('=')
+#             info_dict[key] = value
+
+    #     # Retrieve the member ID
+    #     member_id = info_dict.get('member_id')  # Assuming the member ID is present in the QR code data
+
+    #     # Redirect to member's profile
+    #     group = info_dict.get('group')
+    #     name = info_dict.get('name')
+    #     gender = info_dict.get('gender')
+    #     contact = info_dict.get('contact')
+    #     email = info_dict.get('email')
+    #     address = info_dict.get('address')
+
+    #     # Generate the URL with query parameters
+    #     query_params = {
+    #         'group': group,
+    #         'name': name,
+    #         'gender': gender,
+    #         'contact': contact,
+    #         'email': email,
+    #         'address': address,
+    #     }
+
+    #     view_member_url = reverse('smsApp:view_member', args=[member_id])
+    #     view_member_url += '?' + '&'.join([f'{key}={value}' for key, value in query_params.items()])
+
+    #     return redirect(view_member_url)
+
+    # return render(request, 'scanner.html')
 
 
 
-
-
-
-
-def scanner_view(request):
-    if request.method == 'POST' and 'scan-result' in request.POST:
-        scan_result = request.POST.get('scan-result')
-        try:
-            member = models.Members.objects.get(code=scan_result)
-            return redirect('/view-member/' + str(member.id))
-        except models.Members.DoesNotExist:
-            # Handle the case when member with the specified code does not exist
-            return HttpResponse('Member not found')
+# def scanner_view(request):
+#     if request.method == 'POST' and 'scan-result' in request.POST:
+#         scan_result = request.POST.get('scan-result')
+#         try:
+#             member = models.Members.objects.get(code=scan_result)
+#             return redirect('/view-member/' + str(member.id))
+#         except models.Members.DoesNotExist:
+#             # Handle the case when member with the specified code does not exist
+#             return HttpResponse('Member not found')
 
 
 @login_required
@@ -585,3 +620,27 @@ def error_415(request, exception):
 
 def handler403(request, exception):
     return render(request, "403.html", status=403)
+
+
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
+
+def scanner_view(request):
+    if request.method == 'POST' and 'scan-result' in request.POST:
+        # Extract member's information from QR code
+        scanned_info = request.POST.get('scan-result')
+        info_list = scanned_info.split('&')
+        info_dict = {}
+        for info in info_list:
+            key, value = info.split('=')
+            info_dict[key] = value
+
+        # Get the member ID
+        member_id = info_dict.get('member_id')
+
+        # Redirect to member's profile
+        if member_id:
+            view_member_url = reverse('view_member', kwargs={'pk': member_id})
+            return redirect(view_member_url)
+
+    return render(request, 'scanner.html')
