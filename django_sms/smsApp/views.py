@@ -417,34 +417,39 @@ def view_card(request, pk=None):
         context["member"] = models.Members.objects.get(id=pk)
         return render(request, "view_id.html", context)
 
-# def scanner_view(request):
-#     group = request.GET.get('group', '')
-#     name = request.GET.get('name', '')
-#     gender = request.GET.get('gender', '')
-#     contact = request.GET.get('contact', '')
-#     email = request.GET.get('email', '')
-#     address = request.GET.get('address', '')
-
-#     url = '/view_member/?group={}&name={}&gender={}&contact={}&email={}&address={}'.format(
-#         group, name, gender, contact, email, address
-#     )
-
-#     return redirect(url)
-# def generate_qr_code(request):
-#     qr_code_url = f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={request.scheme}://{request.get_host()}/view_member/?group={request.GET.get('group')}&name={request.GET.get('name')}&gender={request.GET.get('gender')}&contact={request.GET.get('contact')}&email={request.GET.get('email')}&address={request.GET.get('address')}"
-    
-#     return render(request, 'scanner.html', {'qr_code_url': qr_code_url})
-
 
 def scanner_view(request):
     if request.method == 'POST' and 'scan-result' in request.POST:
-        scan_result = request.POST.get('scan-result')
-        try:
-            member = models.Members.objects.get(code=scan_result)
-            return redirect('/view-member/' + str(member.id))
-        except models.Members.DoesNotExist:
-            # Handle the case when member with the specified code does not exist
-            return HttpResponse('Member not found')
+        # Extract member's information from QR code
+        scanned_info = request.POST.get('scan-result')
+        info_list = scanned_info.split('&')
+        info_dict = {}
+        for info in info_list:
+            key, value = info.split('=')
+            info_dict[key] = value
+
+        # Redirect to member's profile
+        group = info_dict.get('group')
+        name = info_dict.get('name')
+        gender = info_dict.get('gender')
+        contact = info_dict.get('contact')
+        email = info_dict.get('email')
+        address = info_dict.get('address')
+        query_params = f'?group={group}&name={name}&gender={gender}&contact={contact}&email={email}&address={address}'
+        view_member_url = f'/view_member/{query_params}'
+        return redirect(view_member_url)
+
+    return render(request, 'scanner/scanner.html')
+
+# def scanner_view(request):
+#     if request.method == 'POST' and 'scan-result' in request.POST:
+#         scan_result = request.POST.get('scan-result')
+#         try:
+#             member = models.Members.objects.get(code=scan_result)
+#             return redirect('/view-member/' + str(member.id))
+#         except models.Members.DoesNotExist:
+#             # Handle the case when member with the specified code does not exist
+#             return HttpResponse('Member not found')
 
 
 @login_required
