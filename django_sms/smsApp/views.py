@@ -418,6 +418,8 @@ def view_card(request, pk=None):
         return render(request, "view_id.html", context)
 
 
+from django.urls import reverse
+
 def scanner_view(request):
     if request.method == 'POST' and 'scan-result' in request.POST:
         # Extract member's information from QR code
@@ -428,6 +430,9 @@ def scanner_view(request):
             key, value = info.split('=')
             info_dict[key] = value
 
+        # Retrieve the member ID
+        member_id = info_dict.get('member_id')  # Assuming the member ID is present in the QR code data
+
         # Redirect to member's profile
         group = info_dict.get('group')
         name = info_dict.get('name')
@@ -435,11 +440,24 @@ def scanner_view(request):
         contact = info_dict.get('contact')
         email = info_dict.get('email')
         address = info_dict.get('address')
-        query_params = f'?group={group}&name={name}&gender={gender}&contact={contact}&email={email}&address={address}'
-        view_member_url = f'/view_member/{query_params}'
+
+        # Generate the URL with query parameters
+        query_params = {
+            'group': group,
+            'name': name,
+            'gender': gender,
+            'contact': contact,
+            'email': email,
+            'address': address,
+        }
+
+        view_member_url = reverse('smsApp:view_member', args=[member_id])
+        view_member_url += '?' + '&'.join([f'{key}={value}' for key, value in query_params.items()])
+
         return redirect(view_member_url)
 
     return render(request, 'scanner.html')
+
 
 
 # def scanner_view(request):
