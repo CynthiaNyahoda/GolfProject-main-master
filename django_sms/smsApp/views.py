@@ -458,29 +458,29 @@ def view_scanner(request):
 
 
 
-# from django.shortcuts import redirect
+from django.shortcuts import redirect
 
 
-# def scan_qr_code(request):
-#     group = request.GET.get('group', '')
-#     name = request.GET.get('name', '')
-#     gender = request.GET.get('gender', '')
-#     contact = request.GET.get('contact', '')
-#     email = request.GET.get('email', '')
-#     address = request.GET.get('address', '')
+def scan_qr_code(request):
+    group = request.GET.get('group', '')
+    name = request.GET.get('name', '')
+    gender = request.GET.get('gender', '')
+    contact = request.GET.get('contact', '')
+    email = request.GET.get('email', '')
+    address = request.GET.get('address', '')
 
-#     # Perform any necessary processing with the QR code data
+    # Perform any necessary processing with the QR code data
 
-#     try:
-#         # Retrieve the member based on the QR code data
-#         member = Members.objects.get(group=group, name=name, gender=gender, contact=contact, email=email, address=address)
-#         member_id = member.pk
+    try:
+        # Retrieve the member based on the QR code data
+        member = Members.objects.get(group=group, name=name, gender=gender, contact=contact, email=email, address=address)
+        member_id = member.pk
 
-#         # Redirect to the view-member page with the appropriate member ID
-#         return redirect('view-member', pk=member_id)
-#     except Members.DoesNotExist:
-#         # Handle the case when member is not found
-#         return HttpResponse("Invalid QR code.")
+        # Redirect to the view-member page with the appropriate member ID
+        return redirect('view-member', pk=member_id)
+    except Members.DoesNotExist:
+        # Handle the case when member is not found
+        return HttpResponse("Invalid QR code.")
 
 
 
