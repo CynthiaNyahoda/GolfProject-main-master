@@ -439,7 +439,7 @@ def scanner_view(request):
         view_member_url = f'/view_member/{query_params}'
         return redirect(view_member_url)
 
-    return render(request, 'scanner/scanner.html')
+    return render(request, 'scanner.html')
 
 # def scanner_view(request):
 #     if request.method == 'POST' and 'scan-result' in request.POST:
