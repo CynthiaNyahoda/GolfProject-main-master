@@ -46,6 +46,7 @@ urlpatterns = [
     # path("view_member/scanner.html/<int:pk>/", views.view_member, name="view-member"),
     # path('view_member',views.view_member,name='view-member'),
     path("view_member/<int:pk>/", views.view_member, name="view-member"),
+    path("scan_qr_code/", views.scan_qr_code, name="scan-qr-code"),
     # path("view_member/scanner.html", scanner_view, name="scanner-view"),
     path("save_member", views.save_member, name="save-member"),
     path("delete_member/<int:pk>", views.delete_member, name="delete-member"),

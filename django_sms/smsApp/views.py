@@ -436,15 +436,15 @@ def view_card(request, pk=None):
 #     return render(request, 'scanner.html', {'qr_code_url': qr_code_url})
 
 
-def scanner_view(request):
-    if request.method == 'POST' and 'scan-result' in request.POST:
-        scan_result = request.POST.get('scan-result')
-        try:
-            member = models.Members.objects.get(code=scan_result)
-            return redirect('/view-member/' + str(member.id))
-        except models.Members.DoesNotExist:
-            # Handle the case when member with the specified code does not exist
-            return HttpResponse('Member not found')
+# def scanner_view(request):
+#     if request.method == 'POST' and 'scan-result' in request.POST:
+#         scan_result = request.POST.get('scan-result')
+#         try:
+#             member = models.Members.objects.get(code=scan_result)
+#             return redirect('/view-member/' + str(member.id))
+#         except models.Members.DoesNotExist:
+#             # Handle the case when member with the specified code does not exist
+#             return HttpResponse('Member not found')
 
 
 @login_required
@@ -455,6 +455,32 @@ def view_scanner(request):
 
 def scanner_view(request):
     return render(request, "scanner.html")
+
+
+
+from django.shortcuts import redirect
+
+def scan_qr_code(request):
+    group = request.GET.get('group', '')
+    name = request.GET.get('name', '')
+    gender = request.GET.get('gender', '')
+    contact = request.GET.get('contact', '')
+    email = request.GET.get('email', '')
+    address = request.GET.get('address', '')
+    view = request.GET.get('view', '')
+
+    # Perform any necessary processing with the QR code data
+
+    if view == 'true':
+        # Assuming you have a `Member` model with a primary key field
+        member = Members.objects.get(group=group, name=name, gender=gender, contact=contact, email=email, address=address)
+        # Redirect to the view-member page with the appropriate pk
+        return redirect('view-member', pk=member.pk)
+
+    # Handle any other logic or render a response if needed
+
+    # Return a generic response if no redirect is required
+    return HttpResponse("QR code scanned successfully.")
 
 
 @login_required
