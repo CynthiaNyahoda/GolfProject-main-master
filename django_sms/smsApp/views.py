@@ -453,9 +453,31 @@ def view_scanner(request):
     return render(request, "scanner.html", context)
 
 
+# def scanner_view(request):
+#     return render(request, "scanner.html")
 def scanner_view(request):
-    return render(request, "scanner.html")
+    if request.method == 'GET':
+        group = request.GET.get('group', '')
+        name = request.GET.get('name', '')
+        gender = request.GET.get('gender', '')
+        contact = request.GET.get('contact', '')
+        email = request.GET.get('email', '')
+        address = request.GET.get('address', '')
 
+        # Perform any necessary processing with the QR code data
+
+        try:
+            # Retrieve the member based on the QR code data
+            member = Members.objects.get(group=group, name=name, gender=gender, contact=contact, email=email, address=address)
+            member_id = member.pk
+
+            # Redirect to the view-member page with the appropriate member ID
+            return redirect('view-member', pk=member_id)
+        except Members.DoesNotExist:
+            # Handle the case when member is not found
+            return HttpResponse("Invalid QR code.")
+    else:
+        return render(request, "scanner.html")
 
 
 from django.shortcuts import redirect
