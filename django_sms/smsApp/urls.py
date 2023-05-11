@@ -54,7 +54,7 @@ urlpatterns = [
     path("member", member_detail, name="member_detail"),
     # path('view_member'+ random_str + '/',views.view_details,name='scanned-code'),
     path("scanner", views.view_scanner, name="scanner"),
-    path("scanner_view/", views.scanner_view, name="scanner-view"),
+    path("scanner_view/", views.scanner_view, name="scanner_view"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
