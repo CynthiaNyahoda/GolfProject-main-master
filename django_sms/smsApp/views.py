@@ -441,6 +441,7 @@ def scanner_view(request):
 
     return render(request, 'scanner.html')
 
+
 # def scanner_view(request):
 #     if request.method == 'POST' and 'scan-result' in request.POST:
 #         scan_result = request.POST.get('scan-result')
