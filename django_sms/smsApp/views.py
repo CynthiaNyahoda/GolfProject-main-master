@@ -622,12 +622,48 @@ def handler403(request, exception):
     return render(request, "403.html", status=403)
 
 
-from django.shortcuts import redirect, get_object_or_404
+# from django.shortcuts import redirect, get_object_or_404
+# from django.urls import reverse
+
+# def scanner_view(request):
+#     if request.method == 'POST' and 'scan-result' in request.POST:
+#         # Extract member's information from QR code
+#         scanned_info = request.POST.get('scan-result')
+#         info_list = scanned_info.split('&')
+#         info_dict = {}
+#         for info in info_list:
+#             key, value = info.split('=')
+#             info_dict[key] = value
+
+#         # Get the member ID
+#         member_id = info_dict.get('member_id')
+
+#         # Redirect to member's profile
+#         if member_id:
+#             view_member_url = reverse('view_member', kwargs={'pk': member_id})
+#             return redirect(view_member_url)
+
+#     return render(request, 'scanner.html')
+
+# from django.http import HttpResponseRedirect
 from django.urls import reverse
+
+# def scanner_view(request):
+#     if request.method == 'POST' and 'scan-result' in request.POST:
+#         scanned_info = request.POST.get('scan-result')
+#         # Extract and process the scanned information
+
+#         # Redirect to the appropriate page
+#         if member_id:
+#             view_member_url = reverse('view_member', kwargs={'pk': member_id})
+#             return HttpResponseRedirect(view_member_url)
+
+#     return render(request, 'scanner.html')
+
+from django.http import HttpResponseRedirect
 
 def scanner_view(request):
     if request.method == 'POST' and 'scan-result' in request.POST:
-        # Extract member's information from QR code
         scanned_info = request.POST.get('scan-result')
         info_list = scanned_info.split('&')
         info_dict = {}
@@ -635,12 +671,10 @@ def scanner_view(request):
             key, value = info.split('=')
             info_dict[key] = value
 
-        # Get the member ID
         member_id = info_dict.get('member_id')
 
-        # Redirect to member's profile
         if member_id:
             view_member_url = reverse('view_member', kwargs={'pk': member_id})
-            return redirect(view_member_url)
+            return HttpResponseRedirect(view_member_url)
 
     return render(request, 'scanner.html')
