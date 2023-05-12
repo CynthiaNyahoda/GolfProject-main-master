@@ -625,9 +625,30 @@ def handler403(request, exception):
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 
+# def scanner_view(request):
+#     if request.method == 'POST' and 'scan-result' in request.POST:
+#         # Extract member's information from QR code
+#         scanned_info = request.POST.get('scan-result')
+#         info_list = scanned_info.split('&')
+#         info_dict = {}
+#         for info in info_list:
+#             key, value = info.split('=')
+#             info_dict[key] = value
+
+#         # Get the member ID
+#         member_id = info_dict.get('member_id')
+
+#         # Redirect to member's profile
+#         if member_id:
+#             view_member_url = reverse('view_member', kwargs={'pk': member_id})
+#             return redirect(view_member_url)
+
+#     return render(request, 'scanner.html')
+
+
+
 def scanner_view(request):
     if request.method == 'POST' and 'scan-result' in request.POST:
-        # Extract member's information from QR code
         scanned_info = request.POST.get('scan-result')
         info_list = scanned_info.split('&')
         info_dict = {}
@@ -635,12 +656,9 @@ def scanner_view(request):
             key, value = info.split('=')
             info_dict[key] = value
 
-        # Get the member ID
         member_id = info_dict.get('member_id')
 
-        # Redirect to member's profile
         if member_id:
-            view_member_url = reverse('view_member', kwargs={'pk': member_id})
-            return redirect(view_member_url)
+            return render(request, 'view_member.html', {'member': info_dict})
 
     return render(request, 'scanner.html')

@@ -43,12 +43,51 @@
     h1{
         text-align: center;}
 </style> 
- <body> 
+
+<!-- scanner.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scanner</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.scan-form').submit(function (event) {
+                event.preventDefault();
+                var scanned_info = $('#scan-result').val();
+                var info_list = scanned_info.split('&');
+                var info_dict = {};
+                for (var i = 0; i < info_list.length; i++) {
+                    var keyValue = info_list[i].split('=');
+                    info_dict[keyValue[0]] = keyValue[1];
+                }
+                var member_id = info_dict['member_id'];
+                if (member_id) {
+                    var view_member_url = '/view_member.html?' + $.param(info_dict);
+                    window.location.href = view_member_url;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Scanner</h1>
+    <form class="scan-form" method="POST">
+        {% csrf_token %}
+        <label for="scan-result">Scan Result:</label>
+        <input type="text" id="scan-result" name="scan-result">
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+
+ {% comment %} <body> 
     <div class="ui container">
         {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}/" alt="QR Code"> {% endcomment %}
 
 
-       <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}{% url 'smsApp:scanner_view' %}?group={{request.GET.group}}&amp;name={{request.GET.name}}&amp;gender={{request.GET.gender}}&amp;contact={{request.GET.contact}}&amp;email={{request.GET.email}}&amp;address={{request.GET.address}}{% if request.path|slice:'12:' == '/view_member/' %}&amp;view=true{% endif %}">
+       {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}{% url 'smsApp:scanner_view' %}?group={{request.GET.group}}&amp;name={{request.GET.name}}&amp;gender={{request.GET.gender}}&amp;contact={{request.GET.contact}}&amp;email={{request.GET.email}}&amp;address={{request.GET.address}}{% if request.path|slice:'12:' == '/view_member/' %}&amp;view=true{% endif %}">
  
 
 
@@ -57,7 +96,7 @@
        
     </div>
 
-</body>
+</body> {% endcomment %} 
 
 
 
