@@ -43,55 +43,12 @@
     h1{
         text-align: center;}
 </style> 
-
-<!-- scanner.html -->
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Scanner</title>
-    <script>
-        const generateQRCodeButton = document.querySelector('.generate-qr-code-button');
-        generateQRCodeButton.addEventListener('click', function () {
-            const group = '{{ member.group }}';
-            const name = '{{ member.name }}';
-            const gender = '{{ member.gender }}';
-            const contact = '{{ member.contact }}';
-            const email = '{{ member.email }}';
-            const address = '{{ member.address }}';
-            const qrCodeURL = generateQRCodeURL(group, name, gender, contact, email, address);
-    
-            // Code to generate the QR code using the qrCodeURL
-    
-            // Redirect to view_member.html with member's details
-            window.location.href = '/view_member.html?group=' + group + '&name=' + name + '&gender=' + gender + '&contact=' + contact + '&email=' + email + '&address=' + address;
-        });
-    
-        function generateQRCodeURL(group, name, gender, contact, email, address) {
-            // Modify this function to generate the appropriate QR code URL using the API
-    
-            // Example:
-            const baseURL = 'https://api.qrserver.com/v1/create-qr-code';
-            const queryParams = new URLSearchParams({
-                group: group,
-                name: name,
-                gender: gender,
-                contact: contact,
-                email: email,
-                address: address
-            });
-            return `${baseURL}?${queryParams}`;
-        }
-    </script>
-    
-
-
- {% comment %} <body> 
+ <body> 
     <div class="ui container">
         {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}/" alt="QR Code"> {% endcomment %}
 
 
-       {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}{% url 'smsApp:scanner_view' %}?group={{request.GET.group}}&amp;name={{request.GET.name}}&amp;gender={{request.GET.gender}}&amp;contact={{request.GET.contact}}&amp;email={{request.GET.email}}&amp;address={{request.GET.address}}{% if request.path|slice:'12:' == '/view_member/' %}&amp;view=true{% endif %}">
+       <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host}}{% url 'smsApp:scanner_view' %}?group={{request.GET.group}}&amp;name={{request.GET.name}}&amp;gender={{request.GET.gender}}&amp;contact={{request.GET.contact}}&amp;email={{request.GET.email}}&amp;address={{request.GET.address}}{% if request.path|slice:'12:' == '/view_member/' %}&amp;view=true{% endif %}">
  
 
 
@@ -100,7 +57,7 @@
        
     </div>
 
-</body> {% endcomment %} 
+</body>
 
 
 
