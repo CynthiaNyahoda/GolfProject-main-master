@@ -50,37 +50,41 @@
 <html>
 <head>
     <title>Scanner</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('.scan-form').submit(function (event) {
-                event.preventDefault();
-                var scanned_info = $('#scan-result').val();
-                var info_list = scanned_info.split('&');
-                var info_dict = {};
-                for (var i = 0; i < info_list.length; i++) {
-                    var keyValue = info_list[i].split('=');
-                    info_dict[keyValue[0]] = keyValue[1];
-                }
-                var member_id = info_dict['member_id'];
-                if (member_id) {
-                    var view_member_url = '/view_member.html?' + $.param(info_dict);
-                    window.location.href = view_member_url;
-                }
-            });
+        const generateQRCodeButton = document.querySelector('.generate-qr-code-button');
+        generateQRCodeButton.addEventListener('click', function () {
+            const group = '{{ member.group }}';
+            const name = '{{ member.name }}';
+            const gender = '{{ member.gender }}';
+            const contact = '{{ member.contact }}';
+            const email = '{{ member.email }}';
+            const address = '{{ member.address }}';
+            const qrCodeURL = generateQRCodeURL(group, name, gender, contact, email, address);
+    
+            // Code to generate the QR code using the qrCodeURL
+    
+            // Redirect to view_member.html with member's details
+            window.location.href = '/view_member.html?group=' + group + '&name=' + name + '&gender=' + gender + '&contact=' + contact + '&email=' + email + '&address=' + address;
         });
+    
+        function generateQRCodeURL(group, name, gender, contact, email, address) {
+            // Modify this function to generate the appropriate QR code URL using the API
+    
+            // Example:
+            const baseURL = 'https://api.qrserver.com/v1/create-qr-code';
+            const queryParams = new URLSearchParams({
+                group: group,
+                name: name,
+                gender: gender,
+                contact: contact,
+                email: email,
+                address: address
+            });
+            return `${baseURL}?${queryParams}`;
+        }
     </script>
-</head>
-<body>
-    <h1>Scanner</h1>
-    <form class="scan-form" method="POST">
-        {% csrf_token %}
-        <label for="scan-result">Scan Result:</label>
-        <input type="text" id="scan-result" name="scan-result">
-        <input type="submit" value="Submit">
-    </form>
-</body>
-</html>
+    
+
 
  {% comment %} <body> 
     <div class="ui container">
