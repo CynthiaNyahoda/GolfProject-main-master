@@ -91,56 +91,51 @@
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Check if the URL parameter 'status' exists
-    var urlParams = new URLSearchParams(window.location.search);
-    var status = urlParams.get("status");
+    var status = "{{ member.status }}"; // Get the status from the member object
 
-    if (status !== null) {
-      // Create a notification element
-      var notification = document.createElement("div");
-      notification.className = "notification";
-      notification.textContent = status === "1" ? "Member is Active" : "Member is Inactive";
+    // Create a notification element
+    var notification = document.createElement("div");
+    notification.className = "notification";
+    notification.textContent = status === "1" ? "Member is Active" : "Member is Inactive";
 
-      // Append the notification to the notification bar
-      var notificationBar = document.getElementById("notification-bar");
-      notificationBar.appendChild(notification);
+    // Append the notification to the notification bar
+    var notificationBar = document.getElementById("notification-bar");
+    notificationBar.appendChild(notification);
 
-      // Set a timeout to fade out the notification after 3 seconds
+    // Set a timeout to fade out the notification after 3 seconds
+    setTimeout(function() {
+      notification.classList.add("fade-out");
       setTimeout(function() {
-        notification.classList.add("fade-out");
-        setTimeout(function() {
-          notificationBar.removeChild(notification);
-        }, 500); 
-      }, 3000);
-    }
+        notificationBar.removeChild(notification);
+      }, 500); // Remove the notification from the DOM after fading out
+    }, 3000);
   });
 </script>
 
 <style>
-  
-.notification-bar {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 9999;
-  width: 250px;
-  background-color: rgba(0, 0, 0, 0.8);
-  padding: 10px;
-  transition: opacity 0.3s ease;
-}
+  /* CSS for the notification bar and notification */
+  .notification-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 9999;
+    width: 250px;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    transition: opacity 0.3s ease;
+  }
 
-.notification {
-  color: #fff;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #333;
-  border-radius: 5px;
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
+  .notification {
+    color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
 
-.fade-out {
-  opacity: 0;
-}
-
+  .fade-out {
+    opacity: 0;
+  }
 </style>
