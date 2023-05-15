@@ -4,7 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-
+from datetime import date, timedelta
 from PIL import Image
 from django.contrib.auth.models import User
 from django.contrib.auth.base_user import BaseUserManager
@@ -45,6 +45,7 @@ class Members(models.Model):
     delete_flag = models.IntegerField(default = 0)
     date_added = models.DateTimeField(default = timezone.now)
     date_created = models.DateTimeField(auto_now = True)
+    end_date = models.DateField(default=date.today().replace(month=1, day=31) + timedelta(days=365))
 
     class Meta:
         verbose_name_plural = "List of Members"
@@ -65,4 +66,4 @@ class Members(models.Model):
                 img.thumbnail(new_img)
                 img.save(self.image_path.path)
         except:
-            self.image_path = "../avatar.png"
+            self.image_path = "../logo.png"

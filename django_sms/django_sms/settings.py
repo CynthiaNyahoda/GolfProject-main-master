@@ -13,16 +13,22 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from django.utils.crypto import get_random_string
 import os
+# import environ
+# env=environ.Env()
+# environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = env('SECRET_KEY')
 SECRET_KEY = "django-insecure-j7xv%)66l8u0^8sxnj7()z$zll8&a2*_h2r84yeo9f2fidx8^7"
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,8 +49,6 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "smsApp.apps.smsAppConfig",
     "homepage.apps.HomepageConfig",
-    "scanner.apps.ScannerConfig",
-    # "qr_code",
 ]
 
 MIDDLEWARE = [
@@ -92,7 +96,11 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
+# render PostqreSQL database(live)
+# import dj_database_url
+# DATABASES = {
+#     'default': dj_database_url.parse(env('DATABASE_URLS'))
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators

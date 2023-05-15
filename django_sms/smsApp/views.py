@@ -1,5 +1,5 @@
 import datetime
-from django.shortcuts import redirect, render, get_object_or_404, HttpResponse
+from django.shortcuts import redirect, render, get_object_or_404
 import json
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -10,6 +10,10 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.decorators import login_required
 import pandas as pd
 from smsApp.models import Members
+from django.core.exceptions import ValidationError
+from .models import Groups
+import random
+
 
 
 # function is used to obtain some context data for a web page, such as the base URL of the web application and some default values for various variables that control the rendering of the page.
@@ -116,7 +120,6 @@ def login_page(request):
 
 
 def login_user(request):
-    logout(request)
     resp = {"status": "failed", "msg": ""}
     username = ""
     password = ""
@@ -142,7 +145,7 @@ def home(request):
     context["page"] = "home"
     context["page_title"] = "Home"
     context["groups"] = (
-        models.Groups.objects.filter(delete_flag=0, status=1).all().count()
+        models.Groups.objects.filter(delete_flag=0).all().count()
     )
     context["active_members"] = (
         models.Members.objects.filter(delete_flag=0, status=1).all().count()
@@ -156,7 +159,8 @@ def home(request):
 
 def logout_user(request):
     logout(request)
-    return redirect("login-page")
+    return redirect("login/")
+
 
 
 @login_required
@@ -225,16 +229,16 @@ def manage_user(request, pk=None):
 def delete_user(request, pk=None):
     resp = {"status": "failed", "msg": ""}
     if pk is None:
-        resp["msg"] = "user ID is invalid"
+        resp["msg"] = "There's no data sent on the request"
     else:
-        try:
-            User.objects.filter(pk=pk).delete()
-            messages.success(request, "User has been deleted successfully.")
-            resp["status"] = "success"
-        except:
-            resp["msg"] = "Deleting user Failed"
-
+        user = User.objects.get(id=pk)
+        user.delete()
+        resp["status"] = "success"
+        messages.success(request, "User has been deleted successfully.")
+        resp["msg"] = "User has been deleted successfully."
     return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
 
 
 @login_required
@@ -306,15 +310,13 @@ def manage_group(request, pk=None):
 def delete_group(request, pk=None):
     resp = {"status": "failed", "msg": ""}
     if pk is None:
-        resp["msg"] = "Group ID is invalid"
+        resp["msg"] = "There's no data sent on the request"
     else:
-        try:
-            models.Groups.objects.filter(pk=pk).update(delete_flag=1)
-            messages.success(request, "Group has been deleted successfully.")
-            resp["status"] = "success"
-        except:
-            resp["msg"] = "Deleting Group Failed"
-
+        group = models.Groups.objects.get(id=pk)
+        group.delete()
+        resp["status"] = "success"
+        messages.success(request, "Group has been deleted successfully.")
+        resp["msg"] = "Group has been deleted successfully."
     return HttpResponse(json.dumps(resp), content_type="application/json")
 
 
@@ -397,16 +399,15 @@ def manage_member(request, pk=None):
 def delete_member(request, pk=None):
     resp = {"status": "failed", "msg": ""}
     if pk is None:
-        resp["msg"] = "Member ID is invalid"
+        resp["msg"] = "There's no data sent on the request"
     else:
-        try:
-            models.Members.objects.filter(pk=pk).update(delete_flag=1)
-            messages.success(request, "Member has been deleted successfully.")
-            resp["status"] = "success"
-        except:
-            resp["msg"] = "Deleting Member Failed"
-
+        member = models.Members.objects.get(id=pk)
+        member.delete()
+        resp["status"] = "success"
+        messages.success(request, "Member has been deleted successfully.")
+        resp["msg"] = "Member has been deleted successfully."
     return HttpResponse(json.dumps(resp), content_type="application/json")
+
 
 
 def view_card(request, pk=None):
@@ -418,58 +419,12 @@ def view_card(request, pk=None):
         return render(request, "view_id.html", context)
 
 
-# from django.urls import reverse
 
-# def scanner_view(request):
-#     if request.method == 'POST' and 'scan-result' in request.POST:
-#         # Extract member's information from QR code
-#         scanned_info = request.POST.get('scan-result')
-#         info_list = scanned_info.split('&')
-#         info_dict = {}
-#         for info in info_list:
-#             key, value = info.split('=')
-#             info_dict[key] = value
-
-    #     # Retrieve the member ID
-    #     member_id = info_dict.get('member_id')  # Assuming the member ID is present in the QR code data
-
-    #     # Redirect to member's profile
-    #     group = info_dict.get('group')
-    #     name = info_dict.get('name')
-    #     gender = info_dict.get('gender')
-    #     contact = info_dict.get('contact')
-    #     email = info_dict.get('email')
-    #     address = info_dict.get('address')
-
-    #     # Generate the URL with query parameters
-    #     query_params = {
-    #         'group': group,
-    #         'name': name,
-    #         'gender': gender,
-    #         'contact': contact,
-    #         'email': email,
-    #         'address': address,
-    #     }
-
-    #     view_member_url = reverse('smsApp:view_member', args=[member_id])
-    #     view_member_url += '?' + '&'.join([f'{key}={value}' for key, value in query_params.items()])
-
-    #     return redirect(view_member_url)
-
-    # return render(request, 'scanner.html')
-
-
-
-# def scanner_view(request):
-#     if request.method == 'POST' and 'scan-result' in request.POST:
-#         scan_result = request.POST.get('scan-result')
-#         try:
-#             member = models.Members.objects.get(code=scan_result)
-#             return redirect('/view-member/' + str(member.id))
-#         except models.Members.DoesNotExist:
-#             # Handle the case when member with the specified code does not exist
-#             return HttpResponse('Member not found')
-
+def scanner_view(request):
+    if request.method == 'POST' and 'scan-result' in request.POST:
+        scan_result = request.POST.get('scan-result')
+        member = models.Members.objects.get(member_code=scan_result)
+        return redirect('/view-member/' + str(member.id))
 
 @login_required
 def view_scanner(request):
@@ -477,36 +432,8 @@ def view_scanner(request):
     return render(request, "scanner.html", context)
 
 
-# def scanner_view(request):
-#     return render(request, "scanner.html")
-
-
-
-from django.shortcuts import redirect
-
-
-def scan_qr_code(request):
-    group = request.GET.get('group', '')
-    name = request.GET.get('name', '')
-    gender = request.GET.get('gender', '')
-    contact = request.GET.get('contact', '')
-    email = request.GET.get('email', '')
-    address = request.GET.get('address', '')
-
-    # Perform any necessary processing with the QR code data
-
-    try:
-        # Retrieve the member based on the QR code data
-        member = Members.objects.get(group=group, name=name, gender=gender, contact=contact, email=email, address=address)
-        member_id = member.pk
-
-        # Redirect to the view-member page with the appropriate member ID
-        return redirect('view-member', pk=member_id)
-    except Members.DoesNotExist:
-        # Handle the case when member is not found
-        return HttpResponse("Invalid QR code.")
-
-
+def scanner_view(request):
+    return render(request, "scanner.html")
 
 
 @login_required
@@ -539,38 +466,59 @@ def per_group(request):
             print(err)
     return render(request, "per_group.html", context)
 
-
-from .models import Groups
-
-import random
-
-
 def generate_code():
     code = "".join(str(random.randint(0, 11)) for _ in range(11))
     return code
 
-
 def create_db(file_path):
-    print("hello")
     df = pd.read_csv(file_path, delimiter=",", header=None)
-    print(df)
     list_of_csv = [list(row) for row in df.values]
-    print(list_of_csv)
+
+    # Get a list of existing members' email and contact
+    existing_email = set(Members.objects.values_list('email', flat=True))
+    existing_contact = set(Members.objects.values_list('contact', flat=True))
+
+    # Iterate over rows in the csv and add new members
     for row in list_of_csv:
-        print(row)
-        test = Members.objects.create(
-            code=generate_code(),
-            group=Groups.objects.get(pk=1),
-            first_name=row[0],
-            middle_name=row[1],
-            last_name=row[2],
-            gender=row[3],
-            contact=row[4],
-            email=row[5],
-            address=row[6],
-            image_path="default.png",
-        )
-        test.save()
+        first_name = row[0]
+        middle_name = row[1]
+        last_name = row[2]
+        gender = row[3]
+        contact = row[4]
+        email = row[5]
+        address = row[6]
+
+        # Check if member already exists based on email and contact
+        if email in existing_email or contact in existing_contact:
+            print(f"Member with email {email} or contact {contact} already exists")
+        else:
+            try:
+                # Create the member if email and contact fields are unique
+                test= Members.objects.create(
+                    code=generate_code(),
+                    group=Groups.objects.get(pk=1),
+                    first_name=first_name,
+                    middle_name=middle_name,
+                    last_name=last_name,
+                    gender=gender,
+                    contact=contact,
+                    email=email,
+                    address=address,
+                    image_path="{% static 'assets/default/img/logo.jpg' %}",
+                )
+                print(f"Member {first_name} {last_name} added successfully")
+                test.save()
+                existing_email.add(email)
+                existing_contact.add(contact)
+            except ValidationError as e:
+                print(f"Error creating member {first_name} {last_name}: {str(e)}")
+# delete csv data from database
+def delete_db(request):
+    Members.objects.all().delete()
+    messages.success(request, "All members deleted successfully.")
+    print("All members deleted successfully")
+
+
 
 
 def main(request):
@@ -620,61 +568,3 @@ def error_415(request, exception):
 
 def handler403(request, exception):
     return render(request, "403.html", status=403)
-
-
-# from django.shortcuts import redirect, get_object_or_404
-# from django.urls import reverse
-
-# def scanner_view(request):
-#     if request.method == 'POST' and 'scan-result' in request.POST:
-#         # Extract member's information from QR code
-#         scanned_info = request.POST.get('scan-result')
-#         info_list = scanned_info.split('&')
-#         info_dict = {}
-#         for info in info_list:
-#             key, value = info.split('=')
-#             info_dict[key] = value
-
-#         # Get the member ID
-#         member_id = info_dict.get('member_id')
-
-#         # Redirect to member's profile
-#         if member_id:
-#             view_member_url = reverse('view_member', kwargs={'pk': member_id})
-#             return redirect(view_member_url)
-
-#     return render(request, 'scanner.html')
-
-# from django.http import HttpResponseRedirect
-from django.urls import reverse
-
-# def scanner_view(request):
-#     if request.method == 'POST' and 'scan-result' in request.POST:
-#         scanned_info = request.POST.get('scan-result')
-#         # Extract and process the scanned information
-
-#         # Redirect to the appropriate page
-#         if member_id:
-#             view_member_url = reverse('view_member', kwargs={'pk': member_id})
-#             return HttpResponseRedirect(view_member_url)
-
-#     return render(request, 'scanner.html')
-
-from django.http import HttpResponseRedirect
-
-def scanner_view(request):
-    if request.method == 'POST' and 'scan-result' in request.POST:
-        scanned_info = request.POST.get('scan-result')
-        info_list = scanned_info.split('&')
-        info_dict = {}
-        for info in info_list:
-            key, value = info.split('=')
-            info_dict[key] = value
-
-        member_id = info_dict.get('member_id')
-
-        if member_id:
-            view_member_url = reverse('view_member', kwargs={'pk': member_id})
-            return HttpResponseRedirect(view_member_url)
-
-    return render(request, 'scanner.html')

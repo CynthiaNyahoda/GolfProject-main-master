@@ -2,15 +2,23 @@
 <style>
   /* CSS for the form */
   /* Style for the container */
-  /* Center the container */
-  #e-details {
-    margin: auto;
-    max-width: 600px;
-    background-color: #f7f7f7;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-  }
+  
+  
+    #e-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: auto;
+      max-width: 600px;
+      background-color: #f7f7f7;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+      height: 500px; /* Adjust the height value as needed */
+    }
+  
+  
 
   /* Style for the member image */
   #member-img {
@@ -69,24 +77,25 @@
   </center>
   <div class="lh-1">
     <dl>
-      <dt>Group</dt>
-      <dd class="ps-4">{{member.group}}</dd>
       <dt>Member Name</dt>
       <dd class="ps-4">{{member.name}}</dd>
-      <dt>Gender</dt>
-      <dd class="ps-4">{{member.gender}}</dd>
-      <dt>Contact #</dt>
-      <dd class="ps-4">{{member.contact}}</dd>
-      <dt>Email</dt>
-      <dd class="ps-4">{{member.email}}</dd>
-      <dt>Address</dt>
-      <dd class="ps-4">{{member.address}}</dd>
-      <dt>Date and Time Added</dt>
+      <dt>Validity Date</dt>
       <dd class="ps-4">{{member.date_added|date:"F d, Y h:i A"}}</dd>
+      <dt>End Date</dt>
+    <dd class="ps-4">{{ member.end_date|date:"F d, Y" }}</dd>
     </dl>
-    <a
-      href="{% url 'smsApp:scanner_view' %}?group={{member.group}}&name={{member.name}}&gender={{member.gender}}&contact={{member.contact}}&email={{member.email}}&address={{member.address}}">Generate
-      QR Code</a>
+    <a href="{% url 'smsApp:scanner-view' %}?code={{ member.code }}&id={{ member.id }}&name={{ member.name }}&status={{ member.status }}">Generate QR Code</a>
 
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var status = "{{ member.status }}"; // Get the status from the member object
+    if (status === "1") {
+      alert("Member is Active"); // Display pop-up message for active member
+    } else if (status === "2") {
+      alert("Member is Inactive"); // Display pop-up message for inactive member
+    }
+  });
+</script>
