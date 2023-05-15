@@ -100,6 +100,17 @@
       transition: opacity 0.3s ease;
       display: flex;
       align-items: center;
+
+    }
+
+    .notification .tick-icon {
+      color: green;
+      margin-right: 5px;
+    }
+  
+    .notification .x-icon {
+      color: red;
+      margin-right: 5px;
     }
 
     .notification span {
@@ -138,14 +149,15 @@
       var status = "{{ member.status }}"; // Get the status from the member object
 
       // Create a notification element
-      var notification = document.createElement("div");
-      notification.className = "notification";
-      notification.textContent = status === "1" ? "Member is Active" : "Member is Inactive";
+var notification = document.createElement("div");
+notification.className = "notification";
+notification.textContent = status === "1" ? "Member is Active" : "Member is Inactive";
 
-      // Add status icon
-      var statusIcon = document.createElement("span");
-      statusIcon.className = status === "1" ? "fas fa-check" : "fas fa-times";
-      notification.appendChild(statusIcon);
+// Add status icon
+var statusIcon = document.createElement("span");
+statusIcon.className = status === "1" ? "tick-icon fas fa-check" : "x-icon fas fa-times";
+notification.appendChild(statusIcon);
+
 
       // Append the notification to the notification bar
       var notificationBar = document.getElementById("notification-bar");
