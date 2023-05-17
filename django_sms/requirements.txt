@@ -10,4 +10,5 @@ cryptography
 psycopg2-binary
 dj-database-url
 django-environ
-decouple
+python-decouple
+
