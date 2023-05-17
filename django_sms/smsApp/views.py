@@ -13,6 +13,11 @@ from smsApp.models import Members
 from django.core.exceptions import ValidationError
 from .models import Groups
 import random
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.utils.html import strip_tags
+
 
 
 
@@ -338,6 +343,25 @@ def members(request):
     return render(request, "members.html", context)
 
 
+
+def send_member_email(member):
+    # Render the email template with the member data
+    email_subject = 'Welcome to Our Membership List'
+    email_body = render_to_string('email_template.html', {'member': member})
+
+    # Send the email
+    send_mail(
+        email_subject,
+        '',
+        settings.EMAIL_HOST_USER,  # Sender's email address
+        [member.email],  # Recipient's email address
+        html_message=email_body,
+    )
+    
+    # Print statements to track the execution
+    print(f"Email sent to {member.email}")
+
+
 @login_required
 def save_member(request):
     resp = {"status": "failed", "msg": ""}
@@ -350,9 +374,16 @@ def save_member(request):
             form = forms.SaveMember(request.POST, request.FILES)
 
         if form.is_valid():
-            form.save()
+            saved_member = form.save()    # Save the member data
+
+            # Retrieve the member object
+            member = saved_member
+            
+            # Call the send_member_email function
+            send_member_email(member)
+
             if post["id"] == "":
-                messages.success(request, "Member has been saved successfully.")
+                messages.success(request, "Member has been saved successfully, Email sent.")
             else:
                 messages.success(request, "Member has been updated successfully.")
             resp["status"] = "success"
@@ -366,7 +397,6 @@ def save_member(request):
         resp["msg"] = "There's no data sent on the request"
 
     return HttpResponse(json.dumps(resp), content_type="application/json")
-
 
 
 def view_member(request, pk=None):
@@ -568,3 +598,6 @@ def error_415(request, exception):
 
 def handler403(request, exception):
     return render(request, "403.html", status=403)
+
+
+
