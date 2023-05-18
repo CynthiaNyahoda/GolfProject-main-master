@@ -344,25 +344,23 @@ def members(request):
 
 
 
-def send_member_email(member):
-    # Render the email template with the member data
-    email_subject = 'Welcome to Our Membership List'
-    email_body = render_to_string('email_template.html', {'member': member})
+def send_member_email(member, base_url):
+    # Generate the QR code URL
+    qr_code_url = f"{base_url}/view_member/{member.id}"
+
+    # Generate the email content
+    email_content = render_to_string('email_template.html', {'member': member, 'qr_code_url': qr_code_url})
 
     # Send the email
-    send_mail(
-        email_subject,
-        '',
-        settings.EMAIL_HOST_USER,  # Sender's email address
-        [member.email],  # Recipient's email address
-        html_message=email_body,
-    )
+    send_mail('Membership Confirmation', '', 'sender@example.com', [member.email], html_message=email_content)
+
     
     # Print statements to track the execution
     print(f"Email sent to {member.email}")
 
 
 @login_required
+
 def save_member(request):
     resp = {"status": "failed", "msg": ""}
     if request.method == "POST":
@@ -378,9 +376,12 @@ def save_member(request):
 
             # Retrieve the member object
             member = saved_member
-            
+
+            # Get the base URL or domain
+            base_url = request.scheme + '://' + request.get_host()
+
             # Call the send_member_email function
-            send_member_email(member)
+            send_member_email(member, base_url)
 
             if post["id"] == "":
                 messages.success(request, "Member has been saved successfully, Email sent.")
@@ -394,7 +395,7 @@ def save_member(request):
                         resp["msg"] += str("<br/>")
                     resp["msg"] += str(f"[{field.name}] {error}")
     else:
-        resp["msg"] = "There's no data sent on the request"
+        resp["msg"] = "There's no data sent in the request"
 
     return HttpResponse(json.dumps(resp), content_type="application/json")
 

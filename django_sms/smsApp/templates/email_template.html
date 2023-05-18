@@ -7,7 +7,7 @@
     <h1>Welcome, {{ member.name }}!</h1>
     <p>Your member code is: {{ member.code }}</p>
     <!-- your_template.html -->
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{ request.scheme }}://{{ request.get_host }}/view_member/{{ request.member.id }}">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{ qr_code_url }}">
     <p>Thank you for joining our membership list.</p>
 </body>
 </html>
