@@ -4,10 +4,10 @@
     <title>Welcome to Our Membership List</title>
 </head>
 <body>
-    {% load static %}
     <h1>Welcome, {{ member.name }}!</h1>
     <p>Your member code is: {{ member.code }}</p>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{request.scheme}}://{{request.get_host()}}/view_member/{{ member.id }}">
+    {% comment %} <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{ request.scheme }}://{{ request.get_host }}/view_member/{{ member.id }}"> {% endcomment %}
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&amp;data={{ request.scheme }}://{{ request.get_host }}/view_member/{{request.GET.id}}"> 
     <p>Thank you for joining our membership list.</p>
 </body>
 </html>
