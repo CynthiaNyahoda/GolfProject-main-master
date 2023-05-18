@@ -66,4 +66,4 @@ class Members(models.Model):
                 img.thumbnail(new_img)
                 img.save(self.image_path.path)
         except:
-            self.image_path = "../logo.png"
+            pass

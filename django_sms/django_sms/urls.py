@@ -14,15 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-
+from django.urls import path, include, re_path
+from django.conf import settings
+from django.views.static import serve
 
 urlpatterns = [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     path("admin/", admin.site.urls),
     path("", include("smsApp.urls")),
-    path("", include("homepage.urls")), 
+    path("", include("homepage.urls")),
 ]
-# hander404 = 'smsApp.views.error_404_view'
-# hander500 = 'smsApp.views.error_500_view'
-# hander403 = 'smsApp.views.error_403_view'
-# hander400 = 'smsApp.views.error_400_view'
+
+hander404 = 'smsApp.views.error_404_view'
+hander500 = 'smsApp.views.error_500_view'
+hander403 = 'smsApp.views.error_403_view'
+hander400 = 'smsApp.views.error_400_view'
