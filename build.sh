@@ -1,14 +1,8 @@
 #!/bin/bash
 
-python -m pip install --upgrade pip
-
 pip install --upgrade pippip install --force-reinstall -U setuptools
-cd django_sms
-
+python manage.py makemigrations
+python manage.py migrate
 pip install -r requirements.txt
-
-if [[ $CREATE_SUPERUSER ]]
-then
-python manage.py createsuperuser --noinput --username $SUPERUSER_NAME --email $SUPERUSER_EMAIL
-fi
- 
+python manage.py makemigrations
+python manage.py migrate
