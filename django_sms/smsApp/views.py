@@ -17,6 +17,8 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.html import strip_tags
+import qrcode
+from . import forms, models
 
 
 
@@ -336,9 +338,11 @@ def members(request):
     if request.method == "POST":
         file = request.FILES.get("file")
         if file:
-            create_db(file)
-            # Redirect back to members page after processing the file
+            base_url = request.build_absolute_uri("/")
+            create_db(file, base_url)
+            # Redirect back to the members page after processing the file
             return redirect("smsApp:member-page")
+
 
     return render(request, "members.html", context)
 
@@ -353,6 +357,7 @@ def send_member_email(member, base_url):
 
     # Send the email
     send_mail('Membership Confirmation', '', 'sender@example.com', [member.email], html_message=email_content)
+
 
     
     # Print statements to track the execution
@@ -378,7 +383,7 @@ def save_member(request):
             member = saved_member
 
             # Get the base URL or domain
-            base_url = request.scheme + '://' + request.get_host()
+            base_url = request.build_absolute_uri("/")
 
             # Call the send_member_email function
             send_member_email(member, base_url)
@@ -457,15 +462,6 @@ def scanner_view(request):
         member = models.Members.objects.get(member_code=scan_result)
         return redirect('/view-member/' + str(member.id))
 
-@login_required
-def view_scanner(request):
-    context = context_data(request)  # Pass request object to context_data function
-    return render(request, "scanner.html", context)
-
-
-def scanner_view(request):
-    return render(request, "scanner.html")
-
 
 @login_required
 def view_details(request, code=None):
@@ -501,13 +497,13 @@ def generate_code():
     code = "".join(str(random.randint(0, 11)) for _ in range(11))
     return code
 
-def create_db(file_path):
+def create_db(file_path, base_url):
     df = pd.read_csv(file_path, delimiter=",", header=None)
     list_of_csv = [list(row) for row in df.values]
 
     # Get a list of existing members' email and contact
-    existing_email = set(Members.objects.values_list('email', flat=True))
-    existing_contact = set(Members.objects.values_list('contact', flat=True))
+    existing_email = set(models.Members.objects.values_list('email', flat=True))
+    existing_contact = set(models.Members.objects.values_list('contact', flat=True))
 
     # Iterate over rows in the csv and add new members
     for row in list_of_csv:
@@ -525,9 +521,9 @@ def create_db(file_path):
         else:
             try:
                 # Create the member if email and contact fields are unique
-                test= Members.objects.create(
+                member = models.Members.objects.create(
                     code=generate_code(),
-                    group=Groups.objects.get(pk=1),
+                    group=models.Groups.objects.get(pk=1),
                     first_name=first_name,
                     middle_name=middle_name,
                     last_name=last_name,
@@ -537,12 +533,22 @@ def create_db(file_path):
                     address=address,
                     image_path="{% static 'assets/default/img/logo.jpg' %}",
                 )
+                # Generate the QR code URL
+                qr_code_url = f"{base_url}/view_member/{member.id}"
+
+                # Generate the email content
+                email_content = render_to_string('email_template.html', {'member': member, 'qr_code_url': qr_code_url})
+
+                # Send the email
+                send_mail('Membership Confirmation', '', 'sender@example.com', [member.email], html_message=email_content)
+
                 print(f"Member {first_name} {last_name} added successfully")
-                test.save()
                 existing_email.add(email)
                 existing_contact.add(contact)
+
             except ValidationError as e:
                 print(f"Error creating member {first_name} {last_name}: {str(e)}")
+
 # delete csv data from database
 def delete_db(request):
     Members.objects.all().delete()
