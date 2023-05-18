@@ -383,7 +383,7 @@ def save_member(request):
             member = saved_member
 
             # Get the base URL or domain
-            base_url = request.build_absolute_uri("/")
+            base_url = request.request.scheme + ':/' + request.get_host()
 
             # Call the send_member_email function
             send_member_email(member, base_url)
