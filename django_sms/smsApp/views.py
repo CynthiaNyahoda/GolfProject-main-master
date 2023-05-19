@@ -531,7 +531,7 @@ def create_db(file_path, base_url):
                     contact=contact,
                     email=email,
                     address=address,
-                    image_path="{% static 'assets/default/img/logo.jpg' %}",
+                    image_path="{% static 'assets/default/img/logo.png' %}",
                 )
                 # Generate the QR code URL
                 qr_code_url = f"{base_url}view_member/{member.id}"
