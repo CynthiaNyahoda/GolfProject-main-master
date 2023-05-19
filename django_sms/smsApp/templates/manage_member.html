@@ -36,11 +36,6 @@
                         value="{{member.first_name}}" required>
                 </div>
                 <div class="mb-3">
-                    <label for="middle_name" class="control-label">Middle Name</label>
-                    <input type="text" id="middle_name" name="middle_name"
-                        class="form-control form-control-sm rounded-0" value="{{member.middle_name}}" required>
-                </div>
-                <div class="mb-3">
                     <label for="last_name" class="control-label">Last Name</label>
                     <input type="text" id="last_name" name="last_name" class="form-control form-control-sm rounded-0"
                         value="{{member.last_name}}" required>
@@ -85,7 +80,7 @@
                         onchange="display_image(this)" accept="image/png, image/jpeg">
                 </div>
                 <div class="mb-3">
-                    <img src="{% if member.image_path %}{{member.image_path.url}}{% else %}{% static 'assets/default/img/logo.jpg' %}{% endif %}"
+                    <img src="{% if member.image_path %}{{member.image_path.url}}{% else %}{% static 'images/logo.png' %}{% endif %}"
                         alt="" class="img-thumbnail bg-gradient-dark border" id="member-img">
                 </div>
             </div>

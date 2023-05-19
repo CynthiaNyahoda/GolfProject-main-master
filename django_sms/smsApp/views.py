@@ -525,13 +525,12 @@ def create_db(file_path, base_url):
                     code=generate_code(),
                     group=models.Groups.objects.get(pk=1),
                     first_name=first_name,
-                    middle_name=middle_name,
                     last_name=last_name,
                     gender=gender,
                     contact=contact,
                     email=email,
                     address=address,
-                    image_path="{% static 'assets/default/img/logo.png' %}",
+                    image_path="{% static 'images/logo.png' %}",
                 )
                 # Generate the QR code URL
                 qr_code_url = f"{base_url}view_member/{member.id}"
