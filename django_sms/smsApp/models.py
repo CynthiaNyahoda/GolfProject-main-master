@@ -50,10 +50,10 @@ class Members(models.Model):
         verbose_name_plural = "List of Members"
 
     def __str__(self):
-        return str(f"{self.code} - {self.first_name}{' '+self.middle_name if not self.middle_name == None else ''} {self.last_name}")
+        return str(f"{self.code} - {self.first_name} {self.last_name}")
 
     def name(self):
-        return str(f"{self.first_name}{' '+self.middle_name if not self.middle_name == None else ''} {self.last_name}")
+        return str(f"{self.first_name} {self.last_name}")
 
     def save(self, *args, **kwargs):
         super().save(* args, **kwargs)
