@@ -494,7 +494,7 @@ def per_group(request):
     return render(request, "per_group.html", context)
 
 def generate_code():
-    code = "".join(str(random.randint(0, 11)) for _ in range(11))
+    code = "".join(str(random.randint(0, 9)) for _ in range(9))
     return code
 
 def create_db(file_path, base_url):
@@ -534,7 +534,7 @@ def create_db(file_path, base_url):
                     image_path="{% static 'assets/default/img/logo.jpg' %}",
                 )
                 # Generate the QR code URL
-                qr_code_url = f"{base_url}/view_member/{member.id}"
+                qr_code_url = f"{base_url}view_member/{member.id}"
 
                 # Generate the email content
                 email_content = render_to_string('email_template.html', {'member': member, 'qr_code_url': qr_code_url})
