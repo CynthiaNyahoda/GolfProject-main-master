@@ -34,7 +34,6 @@ class Members(models.Model):
     code = models.CharField(max_length=250)
     group = models.ForeignKey(Groups, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=250)
-    middle_name = models.CharField(max_length=250, blank=True, null=True)
     last_name = models.CharField(max_length=250)
     gender = models.CharField(max_length=20, choices=(('Male','Male'), ('Female','Female')), default = "Male")
     contact = models.CharField(max_length=250)
