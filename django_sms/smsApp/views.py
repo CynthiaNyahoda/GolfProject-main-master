@@ -529,7 +529,8 @@ def create_db(file_path, base_url):
                     contact=contact,
                     email=email,
                     address=address,
-                    image_path="{% static 'images/logo.png' %}",
+                   image_path = "smsApp/images/logo.png"
+,
                 )
                 # Generate the QR code URL
                 qr_code_url = f"{base_url}view_member/{member.id}"

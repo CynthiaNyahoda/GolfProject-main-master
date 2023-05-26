@@ -50,12 +50,28 @@
             object-position: center center;
             transition: all .2s ease-in-out;
         }
+        
         body{
             /* background-image:url("{% static 'assets/default/img/bg1.jpg' %}"); */
             background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),url('{% static "images/golf.jpg" %}');
             background-size:cover;
             background-repeat:no-repeat;
             background-position:center center;
+        }
+
+        /* Styles for larger screens */
+        @media (min-width: 992px) {
+            /* Add your responsive styles here */
+        }
+        
+        /* Styles for medium screens */
+        @media (min-width: 768px) and (max-width: 991px) {
+            /* Add your responsive styles here */
+        }
+        
+        /* Styles for smaller screens */
+        @media (max-width: 767px) {
+            /* Add your responsive styles here */
         }
     </style>
     {% block headerContent %} {% endblock headerContent %}

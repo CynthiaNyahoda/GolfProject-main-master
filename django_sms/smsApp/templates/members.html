@@ -71,7 +71,29 @@
     }
 </style>
 
+<style>
+    /* Responsive styles */
 
+    @media only screen and (max-width: 768px) {
+        form {
+            width: 80%;
+        }
+
+        .card-body {
+            font-size: 14px;
+        }
+    }
+
+    @media only screen and (max-width: 576px) {
+        form {
+            width: 100%;
+        }
+
+        .card-body {
+            font-size: 12px;
+        }
+    }
+</style>
 
 <section class="py-4">
     <div class="container">
@@ -92,6 +114,7 @@
                         <button class="btn btn-sm btn-primary rounded-0 bg-gradient-primary" type="button"
                             id="create_new"><i class="fa fa-plus"></i> Add New</button>
                     </div>
+                    <div class="table-responsive">
                     <table class="table table-bordered table-striped" id="member-tbl">
                         <colgroup>
                             <col width="5%">
@@ -165,6 +188,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
                 </div>
             </div>
         </div>
