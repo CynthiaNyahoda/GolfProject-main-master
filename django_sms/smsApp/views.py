@@ -508,12 +508,11 @@ def create_db(file_path, base_url):
     # Iterate over rows in the csv and add new members
     for row in list_of_csv:
         first_name = row[0]
-        middle_name = row[1]
-        last_name = row[2]
-        gender = row[3]
-        contact = row[4]
-        email = row[5]
-        address = row[6]
+        last_name = row[1]
+        gender = row[2]
+        contact = row[3]
+        email = row[4]
+        address = row[5]
 
         # Check if member already exists based on email and contact
         if email in existing_email or contact in existing_contact:
