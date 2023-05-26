@@ -87,7 +87,12 @@
       background-color: rgba(0, 0, 0, 0.8);
       padding: 20px;
       border-radius: 10px;
+      opacity: 1;
       transition: opacity 0.3s ease;
+    }
+
+    .notification-bar.fade-out {
+      opacity: 0;
     }
 
     .notification {
@@ -166,8 +171,8 @@
       setTimeout(function() {
         notification.classList.add("fade-out");
         setTimeout(function() {
-          notificationBar.removeChild(notification);
-        }, 300); // Remove the notification from the DOM after fading out
+          notificationBar.parentNode.removeChild(notificationBar);
+        }, 300); // Remove the notification bar from the DOM after fading out
       }, 3000);
     });
   </script>
