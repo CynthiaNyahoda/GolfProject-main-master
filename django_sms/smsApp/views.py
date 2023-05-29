@@ -525,10 +525,8 @@ def create_db(file_path, base_url):
                     group=models.Groups.objects.get(pk=1),
                     first_name=first_name,
                     last_name=last_name,
-                    gender=gender,
                     contact=contact,
                     email=email,
-                    address=address,
                    image_path = "smsApp/images/logo.png"
 ,
                 )
