@@ -114,16 +114,14 @@ class SaveMember(forms.ModelForm):
     first_name = forms.CharField(max_length=250)
     middle_name = forms.CharField(max_length=250, required=False)
     last_name = forms.CharField(max_length=250)
-    gender = forms.CharField(max_length=20)
     contact = forms.CharField(max_length=250)
     email = forms.CharField(max_length=250)
-    address = forms.Textarea()
     status = forms.CharField(max_length=2)
-    image_path = forms.ImageField()
+    image_path = forms.ImageField(required=False)
 
     class Meta:
         model = models.Members
-        fields = ('code', 'group', 'first_name', 'middle_name', 'last_name', 'gender', 'contact', 'email', 'address', 'status', 'image_path', )
+        fields = ('code', 'group', 'first_name', 'middle_name', 'last_name','contact', 'email', 'status', 'image_path', )
 
     def clean_code(self):
         id = int(self.data['id']) if (self.data['id']).isnumeric() else 0

@@ -35,20 +35,17 @@ class Members(models.Model):
     group = models.ForeignKey(Groups, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
-    gender = models.CharField(max_length=20, choices=(('Male','Male'), ('Female','Female')), default = "Male")
     contact = models.CharField(max_length=250)
     email = models.CharField(max_length=250)
-    address = models.TextField(blank=True, null= True)
-    image_path = models.ImageField(upload_to="",blank=True, null=True, default=0)
-    status = models.CharField(max_length=2, choices=(('1','Active'), ('2','Inactive')), default = 1)
-    delete_flag = models.IntegerField(default = 0)
-    date_added = models.DateTimeField(default = timezone.now)
-    date_created = models.DateTimeField(auto_now = True)
+    image_path = models.ImageField(upload_to="", blank=True, null=True, default=0)
+    status = models.CharField(max_length=2, choices=(('1','Active'), ('2','Inactive')), default=1)
+    delete_flag = models.IntegerField(default=0)
+    date_added = models.DateTimeField(default=timezone.now)
+    date_created = models.DateTimeField(auto_now=True)
     end_date = models.DateField(default=date.today().replace(month=1, day=31) + timedelta(days=365))
 
     class Meta:
         verbose_name_plural = "List of Members"
-
     def __str__(self):
         return str(f"{self.code} - {self.first_name} {self.last_name}")
 
