@@ -509,10 +509,9 @@ def create_db(file_path, base_url):
     for row in list_of_csv:
         first_name = row[0]
         last_name = row[1]
-        gender = row[2]
-        contact = row[3]
-        email = row[4]
-        address = row[5]
+        contact = row[2]
+        email = row[3]
+        
 
         # Check if member already exists based on email and contact
         if email in existing_email or contact in existing_contact:
